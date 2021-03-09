@@ -71,7 +71,8 @@ int main(int argc,char **argv)
             fread(ImgBuffer, image_len, 1, fpRead);
             //FILE *fpWrite = fopen("mydata_client_copy.png", "w");
             //fwrite(ImgBuffer, image_len, 1, fpWrite);
-            
+            //fclose(fpWrite);
+
             if (sendall(connect_fd, ImgBuffer, image_len) == -1){
                 perror("send error");
                 close(connect_fd);
@@ -106,7 +107,6 @@ int main(int argc,char **argv)
             printf("file sending ends.\n");
             printf("\n");
             fclose(fpRead);
-            fclose(fpWrite);
             free(ImgBuffer);
         }
         close(connect_fd);
