@@ -43,6 +43,14 @@ int main(int argc,char **argv)
     printf("client receive file:(between ==== and ====)\n");
     printf("====\n");
     bzero(buff, sizeof(buff));
+
+    // get file name
+    if ((rec_len = recv(sockfd,buff,MAXLIN,0)) > 0){
+        printf("%s", buff);
+        bzero(buff, sizeof(buff));
+    }
+
+    // get file content
     while ((rec_len = recv(sockfd,buff,MAXLIN,0)) > 0){
         printf("%s", buff);
         fwrite(buff, sizeof(char), rec_len, fpWrite);
