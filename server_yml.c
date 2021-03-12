@@ -50,6 +50,7 @@ int main(int argc,char **argv)
     printf("======waiting for client's request=====\n"); 
     FILE *fpTime = fopen("./timestamp.txt", "r");
     char strLine[MAXLIN]; 
+    char recvbuff[MAXLIN];
     fgets(strLine, MAXLIN, fpTime); // read one line, when find '\n', stop reading, else read MAXLIN chars
     printf("first line: %s\n", strLine);
     while(!feof(fpTime)){
@@ -111,6 +112,16 @@ int main(int argc,char **argv)
             close(connect_fd);
             exit(0);
         }
+        bzero(recvbuff, sizeof(recvbuff));
+        int rec_len = 0;
+         if((rec_len=recv(sockfd, recvbuff, MAXLIN, 0))==-1)
+        {
+            perror("recv error\n");
+            exit(1);
+        }
+        buf[rec_len]='\0';
+        printf("Received: %s\n", recvbuff);
+        bzero(recvbuff, sizeof(recvbuff));
 
         // send file content
         if (sendall(connect_fd, ImgBuffer, image_len) == -1){

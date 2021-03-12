@@ -45,23 +45,33 @@ int main(int argc,char **argv)
     bzero(buff, sizeof(buff));
 
     // get file name
+    int len = 0;
     if ((rec_len = recv(sockfd,buff,MAXLIN,0)) > 0){
         printf("%s", buff);
         printf("\n");
         printf("------\n");
+        int filename_len = strlen(buff);
+        char *clear_str = (char *)malloc(filename_len * sizeof(char));
+        memcpy(clear_str, buff, filename_len);
+        len = strlen(clear_str);
+        printf("len_clear_str : %d\n", len);
+        if(send(connect_fd, clear_str,len,0)==-1){
+            perror("send error");
+            close(connect_fd);
+            exit(0);
+        }
+
         char *path = "./result/";
         int path_len = strlen(path);
         printf("path_len = %d\n", path_len);
-        // 23 is the len of file name
-        int buff_len = strlen(buff);
-        printf("buff_len = %d\n", buff_len);
-        char* filepath =(char*)malloc( (strlen(path) + strlen(buff) - MAXLIN + 23) * sizeof(char));
+        char* filepath =(char*)malloc((strlen(path) + strlen(clear_str)) * sizeof(char));
         int filepath_len = strlen(filepath);
         printf("filepath_len = %d\n", filepath_len);
         strcpy(filepath, path);
-        strcat(filepath, buff);
+        strcat(filepath, clear_str);
         fpWrite = fopen(filepath, "w");
         bzero(buff, sizeof(buff));
+        free(filepath);
     }
 
     // get file content
@@ -73,6 +83,5 @@ int main(int argc,char **argv)
     printf("====\n");
     fclose(fpWrite);
     close(sockfd);
-    free(filepath);
     return 0;
 }
