@@ -114,7 +114,7 @@ int main(int argc,char **argv)
         }
         bzero(recvbuff, sizeof(recvbuff));
         int rec_len = 0;
-         if((rec_len=recv(sockfd, recvbuff, MAXLIN, 0))==-1)
+         if((rec_len=recv(connect_fd, recvbuff, MAXLIN, 0))==-1)
         {
             perror("recv error\n");
             exit(1);

@@ -55,9 +55,9 @@ int main(int argc,char **argv)
         memcpy(clear_str, buff, filename_len);
         len = strlen(clear_str);
         printf("len_clear_str : %d\n", len);
-        if(send(connect_fd, clear_str,len,0)==-1){
+        if(send(sockfd, clear_str,len,0)==-1){
             perror("send error");
-            close(connect_fd);
+            close(sockfd);
             exit(0);
         }
 
