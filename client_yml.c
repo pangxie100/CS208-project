@@ -46,7 +46,7 @@ int main(int argc,char **argv)
 
     // get file name
     int len = 0;
-    rec_len = recv(sockfd,buff,MAXLIN,0)
+    rec_len = recv(sockfd,buff,MAXLIN,0);
     printf("%s", buff);
     printf("\n");
     printf("------\n");
@@ -61,7 +61,7 @@ int main(int argc,char **argv)
         exit(0);
     }
 
-    char *path = "./result/";
+    char *path = "./result/";  // need to mkdir this directory first, else : segmentation fault
     int path_len = strlen(path);
     printf("path_len = %d\n", path_len);
     char* filepath =(char*)malloc((strlen(path) + strlen(clear_str)) * sizeof(char));
