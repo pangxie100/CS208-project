@@ -119,7 +119,7 @@ int main(int argc,char **argv)
             perror("recv error\n");
             exit(1);
         }
-        buf[rec_len]='\0';
+        recvbuff[rec_len]='\0';
         printf("Received: %s\n", recvbuff);
         bzero(recvbuff, sizeof(recvbuff));
 

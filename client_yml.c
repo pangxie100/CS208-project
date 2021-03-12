@@ -46,33 +46,31 @@ int main(int argc,char **argv)
 
     // get file name
     int len = 0;
-    if ((rec_len = recv(sockfd,buff,MAXLIN,0)) > 0){
-        printf("%s", buff);
-        printf("\n");
-        printf("------\n");
-        int filename_len = strlen(buff);
-        char *clear_str = (char *)malloc(filename_len * sizeof(char));
-        memcpy(clear_str, buff, filename_len);
-        len = strlen(clear_str);
-        printf("len_clear_str : %d\n", len);
-        if(send(sockfd, clear_str,len,0)==-1){
-            perror("send error");
-            close(sockfd);
-            exit(0);
-        }
-
-        char *path = "./result/";
-        int path_len = strlen(path);
-        printf("path_len = %d\n", path_len);
-        char* filepath =(char*)malloc((strlen(path) + strlen(clear_str)) * sizeof(char));
-        int filepath_len = strlen(filepath);
-        printf("filepath_len = %d\n", filepath_len);
-        strcpy(filepath, path);
-        strcat(filepath, clear_str);
-        fpWrite = fopen(filepath, "w");
-        bzero(buff, sizeof(buff));
-        free(filepath);
+    rec_len = recv(sockfd,buff,MAXLIN,0)
+    printf("%s", buff);
+    printf("\n");
+    printf("------\n");
+    int filename_len = strlen(buff);
+    char *clear_str = (char *)malloc(filename_len * sizeof(char));
+    memcpy(clear_str, buff, filename_len);
+    len = strlen(clear_str);
+    printf("len_clear_str : %d\n", len);
+    if(send(sockfd, clear_str,len,0)==-1){
+        perror("send error");
+        close(sockfd);
+        exit(0);
     }
+
+    char *path = "./result/";
+    int path_len = strlen(path);
+    printf("path_len = %d\n", path_len);
+    char* filepath =(char*)malloc((strlen(path) + strlen(clear_str)) * sizeof(char));
+    strcpy(filepath, path);
+    strcat(filepath, clear_str);
+    int filepath_len = strlen(filepath);
+    printf("filepath_len = %d\n", filepath_len);
+    fpWrite = fopen(filepath, "w");
+    bzero(buff, sizeof(buff));
 
     // get file content
     while ((rec_len = recv(sockfd,buff,MAXLIN,0)) > 0){
@@ -83,5 +81,6 @@ int main(int argc,char **argv)
     printf("====\n");
     fclose(fpWrite);
     close(sockfd);
+    free(filepath);
     return 0;
 }
