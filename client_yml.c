@@ -39,7 +39,7 @@ int main(int argc,char **argv)
         printf("connect error:%s(errno:%d)\n", strerror(errno), errno);
         exit(0);
     }
-    FILE *fpWrite = fopen("mydata_client_copy.yml", "w");
+    FILE *fpWrite;
     printf("client receive file:(between ==== and ====)\n");
     printf("====\n");
     bzero(buff, sizeof(buff));
@@ -47,6 +47,13 @@ int main(int argc,char **argv)
     // get file name
     if ((rec_len = recv(sockfd,buff,MAXLIN,0)) > 0){
         printf("%s", buff);
+        printf("\n");
+        printf("------\n");
+        char *path = "./result/";
+        char* filepath =(char*)malloc( (strlen(path) + strlen(buff)) * sizeof(char));
+        strcpy(filepath, path);
+        strcat(filepath, clear_str);
+        fpWrite = fopen(filepath, "w");
         bzero(buff, sizeof(buff));
     }
 

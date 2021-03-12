@@ -64,7 +64,7 @@ int main(int argc,char **argv)
         printf("len_strLine : %d\n", len);
 
         // delete the last char from strLine, maybe "\n"
-        filename_len = strlen(strLine) - 1;
+        int filename_len = strlen(strLine) - 1;
         char *clear_str = (char *)malloc(filename_len * sizeof(char));
         memcpy(clear_str, strLine, filename_len); // copy front part to new string
         
