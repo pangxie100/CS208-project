@@ -48,8 +48,8 @@ int main(int argc,char **argv)
         
     }
     printf("======waiting for client's request=====\n"); 
-    FILE *fpTime = fopen("./timestamp.txt", "r");
-    //FILE *fpTime = fopen("./timestamps.txt", "r");
+    //FILE *fpTime = fopen("./timestamp.txt", "r");
+    FILE *fpTime = fopen("./timestamps.txt", "r");
     char strLine[MAXLIN]; 
     char recvbuff[MAXLIN];
     fgets(strLine, MAXLIN, fpTime); // read one line, when find '\n', stop reading, else read MAXLIN chars
@@ -61,8 +61,8 @@ int main(int argc,char **argv)
         }
         printf("new client connect.\n");
         //FILE *fpRead = fopen("./dataset-corridor4_512_16/mav0/cam0/data/1520621175986840704.png", "r");
-        char *path = "./";
-        //char *path = "./keypoints/";
+        //char *path = "./";
+        char *path = "./keypoints/";
         len = strlen(strLine);
         printf("len_strLine : %d\n", len);
 
@@ -89,7 +89,7 @@ int main(int argc,char **argv)
         //len = strlen("1520621272189937152.yml");
         //printf("len_realpath_part2 : %d\n", len);
         FILE *fpRead = fopen(filepath, "r");
-        //FILE *fpRead = fopen("./1520621272189937152.yml", "r");
+        //FILE *fpRead = fopen("./1520621272189937152.yml", "rb");
         int image_len = 0;
         if (fpRead == NULL){
             perror("Read file error");
