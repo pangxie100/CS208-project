@@ -41,6 +41,10 @@
 #include <unistd.h>
 #define MAXLIN 4096
 
+#include <time.h>
+#include <sys/time.h>
+//#define TIME_COUNT 1
+
 namespace ORB_SLAM3
 {
 
@@ -315,6 +319,13 @@ Frame::Frame(const cv::Mat &imGray, const double &timeStamp, ORBextractor* extra
     N = mvKeys.size();
 
     // zpang add
+#ifdef TIME_COUNT
+    double t0, t1;
+    double t_total = 0.;
+    struct timeval time;
+    gettimeofday(&time, NULL);
+    t0 = (time.tv_sec + 1e-6 * time.tv_usec);
+#endif
     ///*
     char *serverIP = "128.110.96.108";
     int sockfd,rec_len;
@@ -340,7 +351,7 @@ Frame::Frame(const cv::Mat &imGray, const double &timeStamp, ORBextractor* extra
         printf("connect error:%s(errno:%d)\n", strerror(errno), errno);
         exit(0);
     }
-    FILE *fpWrite;
+    //FILE *fpWrite;
     //printf("client receive file:(between ==== and ====)\n");
     //printf("====\n");
     bzero(buff, sizeof(buff));
@@ -370,8 +381,8 @@ Frame::Frame(const cv::Mat &imGray, const double &timeStamp, ORBextractor* extra
     strcat(filepath, clear_str);
     int filepath_len = strlen(filepath);
     //printf("filepath_len = %d\n", filepath_len);
-    printf("filepath = %s\n", filepath);
-    fpWrite = fopen(filepath, "wb");
+    //printf("filepath = %s\n", filepath);
+    //fpWrite = fopen(filepath, "wb");
     bzero(buff, sizeof(buff));
 
     if(send(sockfd, clear_str,len,0)==-1){
@@ -383,50 +394,81 @@ Frame::Frame(const cv::Mat &imGray, const double &timeStamp, ORBextractor* extra
     // get file content
     while ((rec_len = recv(sockfd,buff,MAXLIN,0)) > 0){
         //printf("%s", buff);
-        fwrite(buff, sizeof(char), rec_len, fpWrite);
+        //fwrite(buff, sizeof(char), rec_len, fpWrite);
         bzero(buff, sizeof(buff));
     }
     //printf("====\n");
-    fclose(fpWrite);
+    //fclose(fpWrite);
     close(sockfd);
     //free(filepath);
     //*/
+#ifdef TIME_COUNT
+    //struct timeval time;
+    gettimeofday(&time, NULL);
+    t1 = (time.tv_sec + 1e-6 * time.tv_usec);
+    t_total = (t1 - t0);
+    t0 = t1;
+    cout << "t_transfer_and_store:" << t_total << "s\n" << endl;
+#endif
 
     /*
     double filetime = mTimeStamp * 1e9;
     //cout << "filetime:" << filetime << endl;
-    long long int file_time_int = (long long int)filetime;
+    long int file_time = (long int)filetime;
+    //cout << "file_time:" << file_time << endl;
+    long int file_time_int = file_time / 1000000;
     //cout << "file_time_int:" << file_time_int << endl;
+    //long long int file_time_int = (long long int)filetime;
+    //cout << "file_time_int:" << file_time_int << endl;
+    std::string filepathstore = "./keypoints/" + std::to_string(file_time_int) + ".yml";
+    //cout << "filepathstore:" << filepathstore << endl;
     //*/
 
     /*
-    std::string filepathstore = "./keypoints/" + std::to_string(file_time_int) + ".yml";
-    //cout << "filepathstore:" << filepathstore << endl;
     cv::FileStorage fs(filepathstore, cv::FileStorage::WRITE);
-    write(fs, "mvKeys", mvKeys);
+    cv::write(fs, "mvKeys", mvKeys);
     fs.release();
     //*/
+#ifdef TIME_COUNT
+    //struct timeval time;
+    gettimeofday(&time, NULL);
+    t1 = (time.tv_sec + 1e-6 * time.tv_usec);
+    t_total = (t1 - t0);
+    t0 = t1;
+    cout << "t_local_and_store:" << t_total << "s\n" << endl;
+#endif
 
-    ///*
+    /*
     mvKeys.clear();
+    std::vector<cv::KeyPoint> getmvKeys;
     //cout << "After clear, mvKeys size = " << mvKeys.size() << endl;
     
     // read from local store
-    //std::string filepathstore = "./keypoints/" + std::to_string(file_time_int) + ".yml";
-    //cout << "filepathstore:" << filepathstore << endl;
-    //cv::FileStorage fs2(filepathstore, cv::FileStorage::READ);
+    cv::FileStorage fs2(filepathstore, cv::FileStorage::READ);
 
     // read from socket
     //std::string filepathload = std::string(filepath);
     //cout << "filepathload:" << filepathload << endl;
     //cv::FileStorage fs2(filepathload, cv::FileStorage::READ);
-    cv::FileStorage fs2(filepath, cv::FileStorage::READ);
-    free(filepath);
+    //cv::FileStorage fs2(filepath, cv::FileStorage::READ);
+    //free(filepath);
 
-    cv::FileNode kptFileNode = fs2["mvKeys"];
-    read(kptFileNode, mvKeys);
+    //cv::FileNode kptFileNode = fs2["mvKeys"];
+    //read(kptFileNode, mvKeys);
+    //read(kptFileNode, getmvKeys);
+    //mvKeys = getmvKeys; 
+    cv::read(fs2["mvKeys"], mvKeys);
+
     fs2.release();
     //*/ 
+#ifdef TIME_COUNT
+    //struct timeval time;
+    gettimeofday(&time, NULL);
+    t1 = (time.tv_sec + 1e-6 * time.tv_usec);
+    t_total = (t1 - t0);
+    t0 = t1;
+    cout << "t_local_and_load:" << t_total << "s\n" << endl;
+#endif 
     // zpang add
 
 
