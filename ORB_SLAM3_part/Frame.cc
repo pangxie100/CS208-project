@@ -364,6 +364,7 @@ Frame::Frame(const cv::Mat &imGray, const double &timeStamp, ORBextractor* extra
     //int filename_len = strlen(buff);
     //char *clear_str = (char *)malloc(filename_len * sizeof(char));
     //memcpy(clear_str, buff, filename_len);
+    
     // 23: the size of yml file name(1520621201537469440.yml)
     char *clear_str = (char *)malloc((23 + 1) * sizeof(char)); // 1 byte for '\0'
     memcpy(clear_str, buff, 23);
@@ -451,7 +452,6 @@ Frame::Frame(const cv::Mat &imGray, const double &timeStamp, ORBextractor* extra
     //cout << "filepathload:" << filepathload << endl;
     //cv::FileStorage fs2(filepathload, cv::FileStorage::READ);
     //cv::FileStorage fs2(filepath, cv::FileStorage::READ);
-    //free(filepath);
 
     //cv::FileNode kptFileNode = fs2["mvKeys"];
     //read(kptFileNode, mvKeys);
@@ -461,6 +461,7 @@ Frame::Frame(const cv::Mat &imGray, const double &timeStamp, ORBextractor* extra
 
     fs2.release();
     //*/ 
+    free(filepath);
 #ifdef TIME_COUNT
     //struct timeval time;
     gettimeofday(&time, NULL);

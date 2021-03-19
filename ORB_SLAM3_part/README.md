@@ -9,10 +9,8 @@ line 402: "fclose(fpWrite);"
 
 You can also uncomment the part of storing yml files produced by this program locally:
 
-line 415 - 426
-line 428 - 432
+line 415 - 426 and line 428 - 432
 
 You can also uncomment the part of reading yml files produced by this program locally or from server (in result/):
 
-line 415 - 426
-line 442 - 463
+line 415 - 426 and line 442 - 463
