@@ -50,9 +50,13 @@ void client_yml(char *serverIP)
     printf("%s", buff);
     printf("\n");
     printf("------\n");
-    int filename_len = strlen(buff);
-    char *clear_str = (char *)malloc(filename_len * sizeof(char));
-    memcpy(clear_str, buff, filename_len);
+    //int filename_len = strlen(buff);
+    //char *clear_str = (char *)malloc(filename_len * sizeof(char));
+    //memcpy(clear_str, buff, filename_len);
+    // 23: the size of yml file name(1520621201537469440.yml)
+    char *clear_str = (char *)malloc((23 + 1) * sizeof(char)); // 1 byte for '\0'
+    memcpy(clear_str, buff, 23);
+    clear_str[23] = '\0'; // without this, it will continue to read by clear_str pointer until next '\0', which will give a longer file name that is wrong
     len = strlen(clear_str);
     printf("len_clear_str : %d\n", len);
     if(send(sockfd, clear_str,len,0)==-1){
@@ -68,13 +72,14 @@ void client_yml(char *serverIP)
     strcpy(filepath, path);
     strcat(filepath, clear_str);
     int filepath_len = strlen(filepath);
-    printf("filepath_len = %d\n", filepath_len);
+    //printf("filepath_len = %d\n", filepath_len);
+    printf("filepath = %s\n", filepath);
     fpWrite = fopen(filepath, "w");
     bzero(buff, sizeof(buff));
 
     // get file content
     while ((rec_len = recv(sockfd,buff,MAXLIN,0)) > 0){
-        printf("%s", buff);
+        //printf("%s", buff);
         fwrite(buff, sizeof(char), rec_len, fpWrite);
         bzero(buff, sizeof(buff));
     }
